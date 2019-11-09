@@ -35,4 +35,5 @@ echo "Running local playbooks! "
 export ANSIBLE_LOG_PATH="$IIAB_ADMIN_DIR/admin-install.log"
 
 #ansible-playbook -i $INVENTORY $PLAYBOOK --extra-vars "${ARGS}" --connection=local
+ansible -m setup -i $INVENTORY localhost --connection=local | grep python
 ansible-playbook -i $INVENTORY $PLAYBOOK --connection=local

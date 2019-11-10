@@ -1,0 +1,38 @@
+speedtest-cli
+pyzmq
+systemd-python3
+cracklib
+passlib
+simplejson
+request
+configparser
+PyYAML
+sqlite3
+urllib
+datetime
+
+# track down
+#import os, sys, syslog, signal
+#from glob import glob
+#import logging
+#import pwd, grp
+#import threading, subprocess
+#import shlex
+#import shutil
+#import xml.etree.ElementTree as ET
+#import re
+#import string
+#import crypt
+#import spwd
+#import socket
+#apt install python3-systemd
+#apt install python3-zmq
+#apt install python3-yaml
+#apt install python3-cracklib
+#apt install python3-simplejson
+#apt install python3-configargparse
+#apt install python3-libxml2
+#apt install python3-requests-unixsocket
+#apt install python3-logging-tree
+#apt install python3-daemonize
+

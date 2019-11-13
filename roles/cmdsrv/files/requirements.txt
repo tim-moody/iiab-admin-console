@@ -4,12 +4,14 @@ systemd-python
 cracklib
 passlib
 simplejson
-request
+requests
 configparser
 PyYAML
 #sqlite3 # error
 #urllib  # error
 datetime
+
+
 
 # track down
 #import os, sys, syslog, signal

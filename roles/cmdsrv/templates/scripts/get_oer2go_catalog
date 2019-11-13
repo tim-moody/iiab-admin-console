@@ -1,4 +1,4 @@
-#!/opt/admin/cmdsrv/venv3/bin/python3
+#!{{ cmdsrv_venv_dir }}/bin/python3
 
 # Get new oer2go (rachel) catalog
 # for now we will assume that old modules are still in the current catalog
@@ -25,7 +25,7 @@ import argparse
 import fnmatch
 from datetime import date
 
-SCRIPT_DIR = '/opt/admin/cmdsrv/scripts'
+SCRIPT_DIR = '{{ cmdsrv_scripts_dir }}'
 if not SCRIPT_DIR in sys.path:
     sys.path.append(SCRIPT_DIR)
 import iiab_update_menus as tools
@@ -65,7 +65,7 @@ iiab_menu_files = iiab_menu_dir + "menu-files/"
 iiab_menu_download_dir = iiab_menu_dir + "local/unedited/"
 doc_root_menu_defs = iiab_menu_dir  + 'menu-files/menu-defs/'
 
-working_dir = "/library/working/rachel/" + str(uuid.uuid4()) + "/"
+working_dir = "{{ working_dir }}" + str(uuid.uuid4()) + "/"
 
 php_parser = re.compile('\<\?php echo .+? \?>')
 

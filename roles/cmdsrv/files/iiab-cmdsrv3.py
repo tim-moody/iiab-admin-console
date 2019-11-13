@@ -1,4 +1,4 @@
-#!/opt/admin/cmdsrv/venv3/bin/python3
+#!{{ cmdsrv_venv_dir }}/bin/python3
 
 """
 

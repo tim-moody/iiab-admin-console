@@ -60,8 +60,8 @@
         state=directory
   with_items:
     - "{{ cmdsrv_dir }}"
-    - "{{ cmdsrv_dir }}/scripts"
-    - "{{ cmdsrv_dir }}/venv3"
+    - "{{ cmdsrv_scripts_dir }}"
+    - "{{ cmdsrv_venv_dir }}"
 
 #  Might need to tinker with packages that were once suppiled by apt
 - name: 'Add to Python3 virtual environment for cmdsrv'
@@ -80,6 +80,11 @@
         mode=0700
         owner=root
         group=root
+
+- name: Create symlink to iiab ansible.cfg
+  file: path="{{ cmdsrv_dir }}/ansible.cfg"
+        src="{{ iiab_repo }}/ansible.cfg"
+        state=link
 
 # remove after testing
 #- name: create an empty database
@@ -208,11 +213,6 @@
 #- name: Enable the ubuntu php config file
 #  command: phpenmod 20-zmq
 #  when: is_ubuntu
-
-- name: Create symlink to iiab ansible.cfg
-  file: path="{{ cmdsrv_dir }}/ansible.cfg"
-        src="{{ iiab_repo }}/ansible.cfg"
-        state=link
 
 - name: Ask systemd to reread the unit files, picks up changes done
   shell: systemctl daemon-reload

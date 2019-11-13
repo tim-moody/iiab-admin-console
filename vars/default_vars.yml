@@ -3,6 +3,8 @@
 
 admin_console_dir : "{{ admin_install_base }}/console"
 cmdsrv_dir : "{{ admin_install_base }}/cmdsrv"
+cmdsrv_scripts_dir : "{{ cmdsrv_dir }}/scripts"
+cmdsrv_venv_dir : "{{ cmdsrv_dir }}/venv3"
 cmdsrv_conf_file : "{{ cmdsrv_dir }}/cmdsrv.conf"
 cmdsrv_dbname : "cmdsrv.0.2.db"
 cmdsrv_rundir  : "/run"
@@ -24,3 +26,4 @@ menu_def_icon_path : 'images/'
 iiab_pat_url : 'http://medbox.iiab.me/catalog/pcgvtd9.php'
 iiab_users_name : 'IIAB Users'
 iiab_users_email : 'iiab.users@gmail.com'
+working_dir : '/library/working/rachel/'

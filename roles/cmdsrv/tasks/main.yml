@@ -64,7 +64,7 @@
     - "{{ cmdsrv_venv_dir }}"
 
 #  Might need to tinker with packages that were once suppiled by apt
-- name: 'Add to Python3 virtual environment for cmdsrv'
+- name: 'Create Python3 virtual environment for cmdsrv'
   pip:
     requirements: "{{ iiab_base }}/iiab-admin-console/roles/cmdsrv/files/requirements.txt"
     virtualenv: "{{ cmdsrv_venv_dir }}"
@@ -74,8 +74,23 @@
     extra_args: "--no-cache-dir"
 #       extra_args="--disable-pip-version-check"
 
+# tricky could be 3.6 or 3.8?
+- name: Create python lib directory
+  file: path='{{ cmdsrv_venv_dir }}/lib/python3.7/site-packages/iiab'
+        mode=0644
+        owner=root
+        group=root
+        state=directory
+
+- name: Copy adm_lib library
+  template: src=roles/common/templates/adm_lib.py.j2
+            dest='{{ cmdsrv_venv_dir }}/lib/python3.7/site-packages/iiab/adm_lib.py'
+            mode=0644
+            owner=root
+            group=root
+
 - name: Install Command Server Executable
-  copy: src=iiab-cmdsrv3.py
+  file: src=iiab-cmdsrv3.py
         dest="{{ cmdsrv_dir }}/iiab-cmdsrv3.py"
         mode=0700
         owner=root

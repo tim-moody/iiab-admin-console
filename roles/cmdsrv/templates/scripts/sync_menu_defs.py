@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!{{ cmdsrv_venv_dir }}/bin/python3
 # sync_menu_defs.py
 # try to put js-menu-files repo and local files in sync
 

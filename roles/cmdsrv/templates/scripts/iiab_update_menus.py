@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!{{ cmdsrv_venv_dir }}/bin/python3
 
 """
    Author: George Hunt <georgejhunt <at> gmail.com>

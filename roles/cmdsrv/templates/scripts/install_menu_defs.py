@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!{{ cmdsrv_venv_dir }}/bin/python3
 # install_menu_defs.py
 # after pull/clone of js-menu-files repo, fix up commit_sha and any other fields in local files
 

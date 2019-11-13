@@ -147,7 +147,7 @@ def put_icon_file(icon_file):
     return response
 
 def put_extra_html_file(extra_html_file):
-    with open(js_menu_dir + 'menu-files/menu-defss/' + extra_html_file, "rb") as f:
+    with open(js_menu_dir + 'menu-files/menu-defs/' + extra_html_file, "rb") as f:
         byte_blob = f.read()
     path = menu_def_path + extra_html_file
     response = put_github_file(menu_def_base_url, path, byte_blob)

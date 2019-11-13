@@ -1,14 +1,14 @@
 speedtest-cli
 pyzmq
-systemd-python3
+systemd-python
 cracklib
 passlib
 simplejson
 request
 configparser
 PyYAML
-sqlite3
-urllib
+#sqlite3 # error
+#urllib  # error
 datetime
 
 # track down

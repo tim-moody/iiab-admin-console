@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/opt/admin/cmdsrv/venv3/bin/python3
 
 # Get new oer2go (rachel) catalog
 # for now we will assume that old modules are still in the current catalog
@@ -31,8 +31,7 @@ if not SCRIPT_DIR in sys.path:
 import iiab_update_menus as tools
 
 verbose = False
-jsonPath = "/etc/iiab/"
-
+jsonPath = "{{ iiab_config_dir }}"
 
 oer2go_duplicates = {'en': [5, 6, 17, 19, 20, 23, 44, 50, 60, 65, 68, 86, 88, 93, 139],
   'es': [26, 49, 51, 53, 58, 59, 61, 63, 66, 69, 72, 75, 94],
@@ -53,22 +52,19 @@ rachel_mods_url = "rsync://dev.worldpossible.org/rachelmods/"
 iiab_cat_url = "http://med.iiab.me/catalog/iiab_catalog.json"
 
 # output files
-
 oer2go_catalog_file = jsonPath + "oer2go_catalog.json"
 iiab_catalog_file = jsonPath + "iiab_catalog.json"
+
 # soft code these
-#iiab_root_dir = "/library/www/html/"
-#iiab_modules_dir = iiab_root_dir + "modules/"
-iiab_menu_repo_dir = "/opt/iiab/iiab-admin-console/roles/js-menu/files/"
-iiab_root_dir = "/library/www/html/"
-iiab_modules_dir = "/library/www/html/modules/"
+iiab_root_dir = "{{ doc_root }}/"
+iiab_modules_dir = "{{ iiab_modules_dir }}"
+iiab_menu_repo_dir = "{{ iiab_base }}/iiab-admin-console/roles/js-menu/files/"
 
 iiab_menu_dir = iiab_root_dir + "js-menu/"
 iiab_menu_files = iiab_menu_dir + "menu-files/"
 iiab_menu_download_dir = iiab_menu_dir + "local/unedited/"
 doc_root_menu_defs = iiab_menu_dir  + 'menu-files/menu-defs/'
 
-#iiab_menu_repo_dir = "/opt/iiab/iiab-admin-console/roles/js-menu/files/"
 working_dir = "/library/working/rachel/" + str(uuid.uuid4()) + "/"
 
 php_parser = re.compile('\<\?php echo .+? \?>')

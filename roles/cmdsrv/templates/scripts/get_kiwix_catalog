@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!{{ cmdsrv_venv_dir }}/bin/python3
 
 import xml.etree.ElementTree as ET
 import json

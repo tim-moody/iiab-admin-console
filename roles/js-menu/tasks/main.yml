@@ -109,6 +109,7 @@
         state=directory
         recurse=true
 
+# running in /opt/admin/venv27/
 - name: Add any IIAB roles that are installed to home/menu.js
   shell: "{{ cmdsrv_dir }}/scripts/iiab_update_menus.py"
 
@@ -157,6 +158,7 @@
     state: link
   when: osm_vector_maps_enabled
 
+# running in /opt/admin/venv27/
 - name: Add any MAPS that are installed to home/menu.js
   shell: /usr/bin/iiab-update-map
   when: osm_vector_maps_enabled

@@ -1,4 +1,4 @@
-#!{{ cmdsrv_venv_dir }}/bin/python3
+#!/opt/admin/venv27/bin/python2
 
 """
    Author: George Hunt <georgejhunt <at> gmail.com>

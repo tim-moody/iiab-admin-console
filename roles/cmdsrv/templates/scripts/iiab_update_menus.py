@@ -133,7 +133,7 @@ def put_kiwix_enabled_into_menu_json():
             # create the canonical menu_item name
             lang = zim_versions_info[perma_ref].get('language','en')
             default_name = lang + '-' + perma_ref + '.json'
-            print default_name, zim_versions_info[perma_ref]
+            print (default_name, zim_versions_info[perma_ref])
 
             # check if menuDef exists for this perma_ref
             menu_item = kiwix.find_menuitem_from_zimname(perma_ref)

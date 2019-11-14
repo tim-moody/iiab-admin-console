@@ -38,3 +38,14 @@
   file:
     path: /tmp/heart-beat.txt
     state: absent
+
+#  Might need to tinker python2 packages that were once suppiled by apt
+#- name: 'Add to Python 2.7 virtual environment for iiab related python2.7 apps'
+#  pip:
+#    name: [ '','','' ] # listing
+#    virtualenv: /opt/admin/venv27
+#    virtualenv_site_packages: no
+#    virtualenv_command: /usr/bin/virtualenv
+#    virtualenv_python: python2.7
+#    extra_args: "--no-cache-dir"
+##      extra_args="--disable-pip-version-check"

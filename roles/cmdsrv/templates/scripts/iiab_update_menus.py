@@ -1,4 +1,4 @@
-#!/opt/admin/venv27/bin/python2
+#!{{ cmdsrv_venv_dir }}//bin/python3
 
 """
    Author: George Hunt <georgejhunt <at> gmail.com>
@@ -82,7 +82,7 @@ def put_iiab_enabled_into_menu_json():
    except subprocess.CalledProcessError as e:
       print(str(e))
       sys.exit(1)
-   for iiab_option in outp.split('\n'):
+   for iiab_option in outp.split(b'\n'):
       if iiab_option == 'kiwix': continue
       if iiab_option in iiab_menu_items:
          update_menu_json(iiab_menu_items[iiab_option])

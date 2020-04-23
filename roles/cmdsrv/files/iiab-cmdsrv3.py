@@ -154,7 +154,6 @@ iiab_ini = {}
 kiwix_catalog = {}
 oer2go_catalog = {}
 maps_catalog = {}
-is_rpi = False
 
 # vars set by admin-console
 # config_vars = {} no longer distinct from local vars
@@ -794,8 +793,7 @@ def cmd_handler(cmd_msg):
 
 # Helper functions
 def is_internet_avail():
-    #return is_url_avail("www.google.com")
-    return is_url_avail("neverssl.com") # in case captive portal traps www.google.com
+    return is_url_avail("www.google.com")
 
 def is_url_avail(url):
     try:
@@ -1078,8 +1076,7 @@ def get_rem_dev_list(cmd_info):
         # if disk and removable
         if dev_parts[1] == 'disk':
             if dev_parts[2] == '1':
-                if len(dev_parts) > 3: # some devices seem not to return size so skip them
-                    dev_list[dev_parts[0]] = dev_parts[3]
+                dev_list[dev_parts[0]] = dev_parts[3]
     resp = json.dumps(dev_list)
     return (resp)
 
@@ -2129,6 +2126,21 @@ def save_menu_item_def(cmd_info):
         resp = cmd_error(cmd_info['cmd'], msg='Error writing to Menu Item Definition File.')
         return (resp)
 
+    # this is a stub
+    if upload_flag:
+        try:
+            # get sha of file
+            # curl https://api.github.com/repos/iiab-share/js-menu-files-test/commits?path=menu-defs/es-kolibri_khan_es.json gets proper commitsha
+            # response = requests.get(menu_def_base_url + 'commits?path=' + path, headers=headers)
+            sha = '?'
+            # adm.put_menu_item_def(menu_item_def_name, menu_item_def, sha=sha)
+            # do we really want to send icon and extra html?
+        except :
+            resp = cmd_error(cmd_info['cmd'], msg='Error Uploading Menu Item Definition.')
+            return (resp)
+
+    # what if download_flag, retrieve; should the frontend load the new values?
+
     resp = cmd_success(cmd_info['cmd'])
     return (resp)
 
@@ -2138,7 +2150,8 @@ def sync_menu_item_defs(cmd_info):
     return (json_outp)
 
 def copy_dev_image(cmd_info):
-    if not is_rpi:
+    dev_arch = ansible_facts['ansible_architecture']
+    if dev_arch not in ['armv7l', 'aarch64']:
         resp = cmd_error(cmd_info['cmd'], msg='Image copy only supported on Raspberry Pi at this time.')
         return (resp)
 
@@ -2589,7 +2602,6 @@ def escape_html(text):
 def init():
     global last_command_rowid
     global last_job_rowid
-    global is_rpi
 
     # Read application variables from config files
     app_config()
@@ -2606,13 +2618,8 @@ def init():
     read_oer2go_catalog()
     read_maps_catalog()
 
-    if ansible_facts['ansible_local']['local_facts']['rpi_model'] != 'none':
-        is_rpi = True # convenience
-    else:
-        is_rpi = False
-
     # record sdcard params for rpi
-    if is_rpi:
+    if ansible_facts['ansible_architecture'] in ['armv7l', 'aarch64']:
         write_sdcard_params()
 
     # Compute variables derived from all of the above

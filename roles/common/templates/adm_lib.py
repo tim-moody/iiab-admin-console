@@ -241,6 +241,27 @@ def wget_menu_item_def_file_from_repo(src_url, dest):
     print(cmd)
     outp = subprocess.check_output(cmd, shell=True)
 
+def get_branch_sha(repo_base_url=CONST.menu_def_base_url, branch=CONST.menu_def_default_branch):
+    response = requests.get(repo_base_url + 'branches/' + branch, headers=headers)
+    if response.status_code != 200: # returns 404 if not found
+        print(response.status_code)
+        return None
+    sha = json.loads(response._content)['commit']['sha']
+    return sha
+
+def create_new_branch(master_branch_sha, new_branch, repo_base_url=CONST.menu_def_base_url):
+    sha = get_branch_sha(branch=new_branch)
+    if sha:
+        print('Branch ' + new_branch + ' already exists')
+        return None
+    payload = {
+        "ref": f'refs/heads/{new_branch}',
+        "sha": master_branch_sha
+    }
+    payload_json = json.dumps(payload)
+    response = requests.post(repo_base_url + 'git/refs', data=payload_json, headers=headers)
+    return response
+
 def put_menu_item_def(menu_item_def_name, menu_item_def, sha=None):
     if 'commit_sha' in menu_item_def:
         menu_item_def['previous_commit_sha'] = menu_item_def['commit_sha']
@@ -269,8 +290,8 @@ def put_extra_html_file(extra_html_file, sha=None):
     return response
 
 
-def get_github_file_by_name(menu_def_base_url, path):
-    response_dict = get_github_file_data_by_name(menu_def_base_url, path)
+def get_github_file_by_name(menu_def_base_url, path, branch=CONST.menu_def_default_branch):
+    response_dict = get_github_file_data_by_name(menu_def_base_url, path, branch)
     if response_dict:
         byte_content = str.encode(response_dict['content'])
         file_bytes = base64.b64decode(byte_content)
@@ -279,15 +300,15 @@ def get_github_file_by_name(menu_def_base_url, path):
     else:
         return (None, None)
 
-def get_github_file_data_by_name(menu_def_base_url, path):
-    response = requests.get(menu_def_base_url + 'contents/' + path, headers=headers)
+def get_github_file_data_by_name(menu_def_base_url, path, branch=CONST.menu_def_default_branch):
+    response = requests.get(menu_def_base_url + 'contents/' + path + '?ref=' + branch, headers=headers)
     if response.status_code != 200: # returns 404 if not found
         print(response.status_code)
         return None
     response_dict = json.loads(response._content)
     return response_dict
 
-def put_github_file(menu_def_base_url, path, byte_blob, sha=None):
+def put_github_file(menu_def_base_url, path, byte_blob, sha=None, branch=CONST.menu_def_default_branch):
     file_content = base64.b64encode(byte_blob)
     file_content_str = file_content.decode("utf-8")
     commit_msg = path + " uploaded automatically from " + git_committer_handle
@@ -297,6 +318,7 @@ def put_github_file(menu_def_base_url, path, byte_blob, sha=None):
             "name": CONST.iiab_users_name,
             "email": CONST.iiab_users_email
         },
+        "branch": branch,
         "content": file_content_str
         }
     if sha:
@@ -319,16 +341,17 @@ def del_github_file(url, sha):
     response = requests.delete(url, data=payload_json, headers=headers)
     return response
 
-def get_github_file_commits(path, repo_base_url=CONST.menu_def_base_url):
-    response = requests.get(repo_base_url + 'commits?path=' + path + '&page=1&per_page=1', headers=headers)
+def get_github_file_commits(path, repo_base_url=CONST.menu_def_base_url, branch=CONST.menu_def_default_branch):
+    response = requests.get(repo_base_url + 'commits/' + branch + '?path=' + path + '&page=1&per_page=1', headers=headers)
     if response.status_code != 200: # returns 404 if not found
         print(response.status_code)
         return None
     response_dict = json.loads(response._content)
-    return response_dict[0]
+    # return response_dict[0] ? existing bug, returns dict, not list
+    return response_dict
 
-def get_github_all_commits(repo_base_url=CONST.menu_def_base_url):
-    response = requests.get(repo_base_url + 'commits', headers=headers)
+def get_github_all_commits(repo_base_url=CONST.menu_def_base_url, branch=CONST.menu_def_default_branch):
+    response = requests.get(repo_base_url + 'commits/' + branch, headers=headers)
     if response.status_code != 200: # returns 404 if not found
         print(response.status_code)
         return None
@@ -436,7 +459,7 @@ def download_module_logo(module, working_dir):
         our_logo_file_name = our_logo_file_name_base + logo_ext
         #logo = module['moddir'] + '.' + logo_ext
         if not os.path.isfile(CONST.iiab_menu_files + "images/" + our_logo_file_name):
-            cmdstr = "wget -O " + CONST.iiab_menu_files + "images/" + our_logo_file_name + " " + logo_download_url            
+            cmdstr = "wget -O " + CONST.iiab_menu_files + "images/" + our_logo_file_name + " " + logo_download_url
             try:
                 rc = subproc_run(cmdstr)
                 logo_file_name = our_logo_file_name
@@ -444,7 +467,7 @@ def download_module_logo(module, working_dir):
             except:
                 pass
 
-    if not got_logo and os.path.isdir(CONST.iiab_modules_dir + moddir): # if downloaded   
+    if not got_logo and os.path.isdir(CONST.iiab_modules_dir + moddir): # if downloaded
         # look for logo in root of module
         #module['logo_url'] = None
         os.chdir(CONST.iiab_modules_dir + moddir)
@@ -464,7 +487,7 @@ def download_module_logo(module, working_dir):
         # try to download it
         cmdstr = "rsync -Pavz " + module['rsync_url'] + "/logo.* " + working_dir
         try:
-            rc = subproc_run(cmdstr)        
+            rc = subproc_run(cmdstr)
             os.chdir(working_dir)
             for filename in os.listdir('.'):
                 if fnmatch.fnmatch(filename, '*.png')  or\
@@ -476,7 +499,7 @@ def download_module_logo(module, working_dir):
                     if not os.path.isfile(CONST.iiab_menu_files + "images/" + our_logo_file_name):
                         shutil.copyfile(working_dir + filename,
                                         CONST.iiab_menu_files + "images/" + our_logo_file_name)
-                        logo_file_name = our_logo_file_name                    
+                        logo_file_name = our_logo_file_name
         except:
             pass
 
@@ -983,7 +1006,7 @@ def read_json_file(file_path):
     except OSError as e:
         print('Unable to read url json file', e)
         raise
-    
+
 # duplicates cmdsrv - but now revised
 
 def write_json_file(src_dict, target_file, sort_keys=False):

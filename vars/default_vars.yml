@@ -26,6 +26,7 @@ js_menu_dir : "{{ doc_root }}/js-menu/"
 js_menu_assets : "{{ doc_root }}/common/assets/"
 menu_files_repo : iiab-share/js-menu-files/
 menu_def_base_url : 'https://api.github.com/repos/{{ menu_files_repo }}'
+menu_def_default_branch : 'master'
 menu_def_path : 'menu-defs/'
 menu_def_icon_path : 'images/'
 iiab_pat_url : 'http://medbox.iiab.me/catalog/pcgvtd9-20-3-1.php'

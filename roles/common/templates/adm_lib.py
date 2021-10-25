@@ -262,7 +262,7 @@ def create_new_branch(master_branch_sha, new_branch, repo_base_url=CONST.menu_de
     response = requests.post(repo_base_url + 'git/refs', data=payload_json, headers=headers)
     return response
 
-def put_menu_item_def(menu_item_def_name, menu_item_def, sha=None):
+def put_menu_item_def(menu_item_def_name, menu_item_def, branch=CONST.menu_def_default_branch, sha=None):
     if 'commit_sha' in menu_item_def:
         menu_item_def['previous_commit_sha'] = menu_item_def['commit_sha']
     menu_item_def['commit_sha'] = None
@@ -272,21 +272,21 @@ def put_menu_item_def(menu_item_def_name, menu_item_def, sha=None):
     json_str = json.dumps(menu_item_def, ensure_ascii=False, indent=2)
     json_byte = json_str.encode('utf-8')
     path = CONST.menu_def_path + menu_item_def_name + '.json'
-    response = put_github_file(CONST.menu_def_base_url, path, json_byte, sha)
+    response = put_github_file(CONST.menu_def_base_url, branch, path, json_byte, sha)
     return response
 
-def put_icon_file(icon_file, sha=None):
+def put_icon_file(icon_file, branch=CONST.menu_def_default_branch, sha=None):
     with open(CONST.js_menu_dir + 'menu-files/images/' + icon_file, "rb") as f:
         byte_blob = f.read()
     path = CONST.menu_def_icon_path + icon_file
-    response = put_github_file(CONST.menu_def_base_url, path, byte_blob, sha=sha)
+    response = put_github_file(CONST.menu_def_base_url, branch, path, byte_blob, sha)
     return response
 
-def put_extra_html_file(extra_html_file, sha=None):
+def put_extra_html_file(extra_html_file, branch=CONST.menu_def_default_branch, sha=None):
     with open(CONST.js_menu_dir + 'menu-files/menu-defs/' + extra_html_file, "rb") as f:
         byte_blob = f.read()
     path = CONST.menu_def_path + extra_html_file
-    response = put_github_file(CONST.menu_def_base_url, path, byte_blob, sha=sha)
+    response = put_github_file(CONST.menu_def_base_url, branch, path, byte_blob, sha)
     return response
 
 
@@ -308,7 +308,7 @@ def get_github_file_data_by_name(menu_def_base_url, path, branch=CONST.menu_def_
     response_dict = json.loads(response._content)
     return response_dict
 
-def put_github_file(menu_def_base_url, path, byte_blob, sha=None, branch=CONST.menu_def_default_branch):
+def put_github_file(menu_def_base_url, branch, path, byte_blob, sha):
     file_content = base64.b64encode(byte_blob)
     file_content_str = file_content.decode("utf-8")
     commit_msg = path + " uploaded automatically from " + git_committer_handle

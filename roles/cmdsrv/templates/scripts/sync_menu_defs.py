@@ -51,9 +51,8 @@ for menu_item_def_name in local_menu_item_defs:
         print('Skipping non-standard menu definition ' + menu_item_def_name)
         continue
 
-    # only upload if user explicitly want to share
+    # only upload if user explicitly wants to share
     # download unless user explicitly prohibits
-    # as of Jan 3, 2020 these can only be set manually
     # for generated menu defs upload is false and download true
 
     upload_flag = False
@@ -65,6 +64,11 @@ for menu_item_def_name in local_menu_item_defs:
 
     if menu_item_def_name not in repo_menu_item_defs: # new and upload allowed
         if upload_flag:
+            # create branch for commits
+            new_branch = f'{menu_item_def_name}-{adm.git_committer_handle}-{date.today().strftime("%Y-%m-%d")}'
+            master_branch_sha = adm.get_branch_sha()
+            adm.create_new_branch(master_branch_sha, new_branch)
+
             # Upload any icon
             if 'logo_url' in menu_item_def and menu_item_def['logo_url'] != '':
                 logo_url_file = menu_item_def['logo_url']
@@ -72,10 +76,10 @@ for menu_item_def_name in local_menu_item_defs:
                     logo_sha = menu_def_repo_data['icons'][logo_url_file].get('sha', None)
                 else:
                     logo_sha = None
-                adm.put_icon_file(logo_url_file, sha=logo_sha)
+                adm.put_icon_file(logo_url_file, new_branch, sha=logo_sha)
             # upload html file - not for now
             # upload menu def
-            adm.put_menu_item_def(menu_item_def_name, menu_item_def)
+            adm.put_menu_item_def(menu_item_def_name, menu_item_def, new_branch)
             menu_item_def = adm.get_menu_item_def_from_repo_by_name(menu_item_def_name) # get the actual stored values including commit
             # write it to local files so we have the new commit sha and preserve flags
             # reset upload flag

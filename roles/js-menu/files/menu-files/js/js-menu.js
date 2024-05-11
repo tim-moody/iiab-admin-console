@@ -63,6 +63,32 @@ var ajaxCallCount = 0;
 var i;
 var searchResults = "";
 
+var styleSets = {'legacy': {'bodyBackground': '#CBFFAA', 'wrapperBackground': '#CBFFAA',
+                    'headerBackground': '#73b9ff', 'headerColor': '#913900'},
+                'pilot':{'bodyBackground': '#f8f8f8', 'wrapperBackground': '#333',
+                    'headerBackground': '#333', 'headerColor': '#fff'},
+                'modern': {'bodyBackground': '#f8fdf5', 'wrapperBackground': '#d0e9c1',
+                    'headerBackground': '#e6ebf0', 'headerColor': '#816859'}}
+
+var styleSets = {'legacy':  [['body', 'background-color', '#CBFFAA'],
+                            ['.wrapper', 'background-color', '#CBFFAA'],
+                            ['#headerMobile', 'background-color', '#73b9ff'],
+                            ['#headerDesktop', 'background-color', '#73b9ff'],
+                            ['#headerMobile', 'color', '#913900'],
+                            ['#headerDesktop', 'color', '#913900']],
+                'pilot':    [['body', 'background-color', '#f8f8f8'],
+                            ['.wrapper', 'background-color', '#333'],
+                            ['#headerMobile', 'background-color', '#333'],
+                            ['#headerDesktop', 'background-color', '#333'],
+                            ['#headerMobile', 'color', '#fff'],
+                            ['#headerDesktop', 'color', '#fff']],
+                'modern':   [['body', 'background-color', '#f8fdf5'],
+                            ['.wrapper', 'background-color', '#d0e9c1'],
+                            ['#headerMobile', 'background-color', '#e6ebf0'],
+                            ['#headerDesktop', 'background-color', '#e6ebf0'],
+                            ['#headerMobile', 'color', '#816859'],
+                            ['#headerDesktop', 'color', '#816859']]}
+
 // get config
 var getConfigJson = $.getJSON(configJson)
     .done(function (data) {
@@ -218,6 +244,34 @@ function procPage() {
     else
         $('#headerDesktop').css('display', 'flex');
 }
+
+function setLegacyColors() {
+
+    $('body').css('background-color', '#CBFFAA')
+    $('.wrapper').css('background-color', '#CBFFAA')
+
+    $('#headerMobile').css('background-color', '#73b9ff')
+    $('#headerDesktop').css('background-color', '#73b9ff')
+    $('#headerMobile').css('color', '#913900')
+    $('#headerDesktop').css('color', '#913900')
+}
+
+function applyStyles(style) {
+    $('body').css('background-color', style.bodyBackground)
+    $('.wrapper').css('background-color', style.wrapperBackground)
+
+    $('#headerMobile').css('background-color', style.headerBackground)
+    $('#headerDesktop').css('background-color', style.headerBackground)
+    $('#headerMobile').css('color', style.headerColor)
+    $('#headerDesktop').css('color', style.headerColor)
+}
+
+function applyStyleSet(styleSet) {
+    styleSet.forEach((element) => {
+        $(element[0]).css(element[1], element[2])
+    });
+}
+
 
 function updateServerTime() {
     if (isMobile || navigator.userAgent.search('Win64') !== -1 || navigator.platform == 'MacIntel') {

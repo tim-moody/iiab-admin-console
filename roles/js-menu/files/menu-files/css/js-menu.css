@@ -8,8 +8,7 @@ html {font-size: 16px;}
 }
 
 body {
-  /* background-color: #CBFFAA; #efffe6 */
-  background-color: #f8fdf5;
+  background-color: #CBFFAA;
   font-size: 100%;
   font-family: 'Open Sans', sans-serif;
   max-width: 1180px;
@@ -18,8 +17,7 @@ body {
 }
 
 .wrapper {
-  /* background-color: rgba(203,255,170,0.99); */
-  background-color: #d0e9c1; /*#f8fdf5; */
+  background-color: rgba(203,255,170,0.99);
   font-size: 100%;
   font-family: 'Open Sans', sans-serif;
   max-width: 1180px;
@@ -69,10 +67,8 @@ a:visited { color: #649; }
 
 #headerMobile, #headerDesktop {
 width:100%;
-background: #e6ebf0;
-/*background: #d9e8f7;*/
-/* color: #913900;*/
-color: #816859;
+background: #73b9ff;
+color: #913900;
 border-radius: 5px;
 margin: auto;
 display: none;
@@ -188,4 +184,3 @@ height: 120px;
 #results .title { font-size: 100%; }
 #results .url { font-size: 80%; color: green; margin: 5px 0 5px 0; }
 #results .description{ font-size: 90%; margin-bottom: 10px; }
-

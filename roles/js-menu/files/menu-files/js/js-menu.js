@@ -63,13 +63,7 @@ var ajaxCallCount = 0;
 var i;
 var searchResults = "";
 
-var styleSets = {'legacy': {'bodyBackground': '#CBFFAA', 'wrapperBackground': '#CBFFAA',
-                    'headerBackground': '#73b9ff', 'headerColor': '#913900'},
-                'pilot':{'bodyBackground': '#f8f8f8', 'wrapperBackground': '#333',
-                    'headerBackground': '#333', 'headerColor': '#fff'},
-                'modern': {'bodyBackground': '#f8fdf5', 'wrapperBackground': '#d0e9c1',
-                    'headerBackground': '#e6ebf0', 'headerColor': '#816859'}}
-
+// future variable styles on home page menu
 var styleSets = {'legacy':  [['body', 'background-color', '#CBFFAA'],
                             ['.wrapper', 'background-color', '#CBFFAA'],
                             ['#headerMobile', 'background-color', '#73b9ff'],
@@ -245,28 +239,7 @@ function procPage() {
         $('#headerDesktop').css('display', 'flex');
 }
 
-function setLegacyColors() {
-
-    $('body').css('background-color', '#CBFFAA')
-    $('.wrapper').css('background-color', '#CBFFAA')
-
-    $('#headerMobile').css('background-color', '#73b9ff')
-    $('#headerDesktop').css('background-color', '#73b9ff')
-    $('#headerMobile').css('color', '#913900')
-    $('#headerDesktop').css('color', '#913900')
-}
-
-function applyStyles(style) {
-    $('body').css('background-color', style.bodyBackground)
-    $('.wrapper').css('background-color', style.wrapperBackground)
-
-    $('#headerMobile').css('background-color', style.headerBackground)
-    $('#headerDesktop').css('background-color', style.headerBackground)
-    $('#headerMobile').css('color', style.headerColor)
-    $('#headerDesktop').css('color', style.headerColor)
-}
-
-function applyStyleSet(styleSet) {
+function applyStyleSet(styleSet) { // not used
     styleSet.forEach((element) => {
         $(element[0]).css(element[1], element[2])
     });

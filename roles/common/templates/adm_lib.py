@@ -23,7 +23,8 @@ import iiab.iiab_lib as iiab
 import iiab.iiab_const as IIAB_CONST
 import iiab.adm_const as CONST
 
-headers = {}
+ro_headers = {'Content-Type': 'application/json'}
+rw_headers = ro_headers # default is no read/write
 git_committer_handle = ''
 map_catalog = {}
 
@@ -125,7 +126,7 @@ def get_menu_def_repo_data():
     repo_data['html'] = {}
     repo_data ['icons']= {}
 
-    response = requests.get(CONST.menu_def_base_url + 'contents/' + CONST.menu_def_path, headers=headers)
+    response = requests.get(CONST.menu_def_base_url + 'contents/' + CONST.menu_def_path, headers=ro_headers)
     file_list = json.loads(response._content)
     for item in file_list:
         if item['type'] == 'file':
@@ -135,7 +136,7 @@ def get_menu_def_repo_data():
             elif item['name'].endswith('.html'):
                 repo_data['html'][item['name']] = item
 
-    response = requests.get(CONST.menu_def_base_url + 'contents/' + CONST.menu_def_icon_path, headers=headers)
+    response = requests.get(CONST.menu_def_base_url + 'contents/' + CONST.menu_def_icon_path, headers=ro_headers)
     file_list = json.loads(response._content)
     for item in file_list:
         if item['type'] == 'file':
@@ -145,7 +146,7 @@ def get_menu_def_repo_data():
 
 def get_repo_menu_item_defs():
     menu_item_defs = {}
-    response = requests.get(CONST.menu_def_base_url + 'contents/' + CONST.menu_def_path, headers=headers)
+    response = requests.get(CONST.menu_def_base_url + 'contents/' + CONST.menu_def_path, headers=ro_headers)
     menu_item_def_list = json.loads(response._content)
     for item in menu_item_def_list:
         if item['type'] == 'file':
@@ -249,7 +250,6 @@ def put_menu_item_def(menu_item_def_name, menu_item_def, sha=None):
     if 'commit_sha' in menu_item_def:
         menu_item_def['previous_commit_sha'] = menu_item_def['commit_sha']
     menu_item_def['commit_sha'] = None
-
     # this will order fields and remove ones not wanted in repo
     menu_item_def = format_menu_item_def(menu_item_def_name, menu_item_def)
     json_str = json.dumps(menu_item_def, ensure_ascii=False, indent=2)
@@ -284,7 +284,7 @@ def get_github_file_by_name(menu_def_base_url, path):
         return (None, None)
 
 def get_github_file_data_by_name(menu_def_base_url, path):
-    response = requests.get(menu_def_base_url + 'contents/' + path, headers=headers)
+    response = requests.get(menu_def_base_url + 'contents/' + path, headers=ro_headers)
     if response.status_code != 200: # returns 404 if not found
         print(response.status_code)
         return None
@@ -306,7 +306,7 @@ def put_github_file(menu_def_base_url, path, byte_blob, sha=None):
     if sha:
         payload['sha'] = sha
     payload_json = json.dumps(payload)
-    response = requests.put(menu_def_base_url + 'contents/' + path, data=payload_json, headers=headers)
+    response = requests.put(menu_def_base_url + 'contents/' + path, data=payload_json, headers=rw_headers)
     return response
 
 def del_github_file(url, sha):
@@ -320,11 +320,11 @@ def del_github_file(url, sha):
         "sha": sha
         }
     payload_json = json.dumps(payload)
-    response = requests.delete(url, data=payload_json, headers=headers)
+    response = requests.delete(url, data=payload_json, headers=rw_headers)
     return response
 
 def get_github_file_commits(path, repo_base_url=CONST.menu_def_base_url):
-    response = requests.get(repo_base_url + 'commits?path=' + path + '&page=1&per_page=1', headers=headers)
+    response = requests.get(repo_base_url + 'commits?path=' + path + '&page=1&per_page=1', headers=ro_headers)
     if response.status_code != 200: # returns 404 if not found
         print(response.status_code)
         return None
@@ -332,7 +332,7 @@ def get_github_file_commits(path, repo_base_url=CONST.menu_def_base_url):
     return response_dict[0]
 
 def get_github_all_commits(repo_base_url=CONST.menu_def_base_url):
-    response = requests.get(repo_base_url + 'commits', headers=headers)
+    response = requests.get(repo_base_url + 'commits', headers=ro_headers)
     if response.status_code != 200: # returns 404 if not found
         print(response.status_code)
         return None
@@ -989,13 +989,19 @@ def is_service_active(service):
         return True
 
 def pcgvtd9():
-    global headers
+    global rw_headers
     global git_committer_handle
-    response = requests.get(CONST.iiab_pat_url)
-    data = json.loads(response._content)
-    headers = {'Content-Type':'application/json',
-               'Authorization': 'token ' + data['pat']}
-    git_committer_handle = data['iiab_user_ip']
+    try:
+        git_params = read_json_file(CONST.github_params_file)
+        git_committer_handle = git_params['git_committer_handle']
+        git_pat = git_params['pat']
+    except:
+        git_committer_handle = None
+        git_pat = None
+    #response = requests.get(CONST.iiab_pat_url)
+    #data = json.loads(response._content)
+    rw_headers = {'Content-Type':'application/json',
+               'Authorization': 'token ' + git_pat}
 
 def fetch_menu_json_value(key):
     menu_json = read_json_file(CONST.menu_json_file, fix_json=True)

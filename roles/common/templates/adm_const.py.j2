@@ -9,8 +9,8 @@ iiab_cmd_service_timeout = {{ 60000 }} # in ms
 cmdsrv_proc_timeout = iiab_cmd_service_timeout / 1000
 cmdsrv_proc_timeout -= 5 # so we timeout in uwsgi wrapper
 
-#menu_def_base_url = "{{ menu_def_base_url }}"
-menu_def_base_url = "https://api.github.com/repos/iiab-share/js-menu-files-test/
+menu_def_base_url = "{{ menu_def_base_url }}"
+#menu_def_base_url = "https://api.github.com/repos/iiab-share/js-menu-files-test/"
 menu_def_path = "{{ menu_def_path }}" # in repo not file system
 menu_def_icon_path = "{{ menu_def_icon_path }}"
 # add ?ref=xxx for branch

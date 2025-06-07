@@ -997,7 +997,7 @@ def pcgvtd9():
         git_pat = git_params['pat']
     except:
         git_committer_handle = None
-        git_pat = None
+        git_pat = '12345' # any invalid token
     #response = requests.get(CONST.iiab_pat_url)
     #data = json.loads(response._content)
     rw_headers = {'Content-Type':'application/json',

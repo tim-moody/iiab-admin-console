@@ -49,7 +49,8 @@ dup_list = [str(i) for i in dup_list]
 
 iiab_oer2go_catalog = {}
 
-php_parser = re.compile('\<\?php echo .+? \?>')
+#php_parser = re.compile('\<\?php echo .+? \?>')
+php_parser = re.compile(r'<\?php\s+echo\s+.+?\s+\?>') # eliminate warning
 
 def main ():
     global verbose

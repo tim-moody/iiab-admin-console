@@ -173,6 +173,7 @@ def get_local_menu_item_defs():
 def get_menu_item_def_from_repo_by_name(menu_item_name):
     file_bytes, sha = get_github_file_by_name(CONST.menu_def_base_url, CONST.menu_def_path + menu_item_name + '.json')
     # of course we already had the sha
+    # file_bytes can be None if item is not in repo
     menu_item_def = json.loads(file_bytes)
     menu_item_def['edit_status'] = 'repo'
     menu_item_def['commit_sha'] = sha
@@ -307,6 +308,8 @@ def put_github_file(menu_def_base_url, path, byte_blob, sha=None):
         payload['sha'] = sha
     payload_json = json.dumps(payload)
     response = requests.put(menu_def_base_url + 'contents/' + path, data=payload_json, headers=rw_headers)
+    if response.status_code not in [200, 201]:
+        print('Unable to commit ' + path)
     return response
 
 def del_github_file(url, sha):
@@ -491,7 +494,8 @@ def generate_module_extra_html(module, working_dir):
     # get rachel index for parsing for 'extra-html'
     # print "Downloading rachel-index.php"
     cmdstr = "rsync -Pavz " + module['rsync_url'] + "/rachel-index.php " + working_dir
-    php_parser = re.compile('\<\?php echo .+? \?>')
+    php_parser = re.compile(r'<\?php\s+echo\s+.+?\s+\?>') # eliminate warning
+    # php_parser = re.compile('\<\?php echo .+? \?>')
     args = shlex.split(cmdstr)
     try:
         outp = subprocess.check_output(args)

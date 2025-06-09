@@ -995,6 +995,7 @@ def is_service_active(service):
 def pcgvtd9():
     global rw_headers
     global git_committer_handle
+    # if os.path.isfile(CONST.github_params_file):
     try:
         git_params = read_json_file(CONST.github_params_file)
         git_committer_handle = git_params['git_committer_handle']

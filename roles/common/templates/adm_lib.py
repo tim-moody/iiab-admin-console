@@ -1006,7 +1006,7 @@ def pcgvtd9():
     else:
         response = requests.get(CONST.iiab_pat_url)
         data = json.loads(response._content)
-        git_committer_handle = data['git_committer_handle']
+        git_committer_handle = data['iiab_user_ip']
         git_pat = data['pat']
     rw_headers = {'Content-Type':'application/json',
                 'Authorization': 'token ' + git_pat}

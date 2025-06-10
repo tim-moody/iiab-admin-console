@@ -995,18 +995,22 @@ def is_service_active(service):
 def pcgvtd9():
     global rw_headers
     global git_committer_handle
-    # if os.path.isfile(CONST.github_params_file):
-    try:
-        git_params = read_json_file(CONST.github_params_file)
-        git_committer_handle = git_params['git_committer_handle']
-        git_pat = git_params['pat']
-    except:
-        git_committer_handle = ''
-        git_pat = '12345' # any invalid token
-    #response = requests.get(CONST.iiab_pat_url)
-    #data = json.loads(response._content)
+    if os.path.isfile(CONST.github_params_file):
+        try:
+            git_params = read_json_file(CONST.github_params_file)
+            git_committer_handle = git_params['git_committer_handle']
+            git_pat = git_params['pat']
+        except:
+            git_committer_handle = ''
+            git_pat = '12345' # any invalid token
+    else:
+        response = requests.get(CONST.iiab_pat_url)
+        data = json.loads(response._content)
+        git_committer_handle = data['git_committer_handle']
+        git_pat = data['pat']
     rw_headers = {'Content-Type':'application/json',
-               'Authorization': 'token ' + git_pat}
+                'Authorization': 'token ' + git_pat}
+    ro_headers = rw_headers # for now we use the same headers for read-only
 
 def fetch_menu_json_value(key):
     menu_json = read_json_file(CONST.menu_json_file, fix_json=True)
